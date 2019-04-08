@@ -11,6 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+# Modifications copyright (C) Filip Kren
+# Modifications occured 8.4.2019
+# Added global variable for infected files
+
 
 import boto3
 import errno
@@ -23,6 +27,7 @@ AV_SCAN_START_SNS_ARN = os.getenv("AV_SCAN_START_SNS_ARN")
 AV_SCAN_START_METADATA = os.getenv("AV_SCAN_START_METADATA", "av-scan-start")
 AV_STATUS_CLEAN = os.getenv("AV_STATUS_CLEAN", "CLEAN")
 AV_STATUS_INFECTED = os.getenv("AV_STATUS_INFECTED", "INFECTED")
+AV_INFECTED_BUCKET = os.getenv("AV_INFECTED_BUCKET")
 AV_STATUS_METADATA = os.getenv("AV_STATUS_METADATA", "av-status")
 AV_STATUS_SNS_ARN = os.getenv("AV_STATUS_SNS_ARN")
 AV_TIMESTAMP_METADATA = os.getenv("AV_TIMESTAMP_METADATA", "av-timestamp")

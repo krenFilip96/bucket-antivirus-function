@@ -11,6 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+# Modifications copyright (C) Filip Kren
+# Modifications occured 8.4.2019
+# Added function for move infected files to another S3_bucket.
+
 
 import boto3
 import clamav
@@ -138,7 +142,20 @@ def sns_scan_results(s3_object, result):
             }
     }
     )
-
+def infected_s3_object(s3_object) :
+    infected_s3_object = s3.Object(AV_INFECTED_BUCKET,s3_object.key)
+    try:
+        infected_s3_object.copy(
+                {
+                        'Bucket': s3_object.bucket_name,
+                        'Key': s3_object.key
+                }
+            )
+    except:
+        print ("Failed to move infected file : %s.%s %" (s3_object.bucket_name,s3_object.key))
+    else:
+        print("Infected file moved to :  s%.%s %" (infected_s3_object.bucket_name, infected_s3_object.key))
+        delete_s3_object(s3_object)
 
 def lambda_handler(event, context):
     start_time = datetime.utcnow()
@@ -161,8 +178,11 @@ def lambda_handler(event, context):
         os.remove(file_path)
     except OSError:
         pass
-    if str_to_bool(AV_DELETE_INFECTED_FILES) and scan_result == AV_STATUS_INFECTED:
-        delete_s3_object(s3_object)
+    if scan_result == AV_STATUS_INFECTED:
+        if AV_INFECTED_BUCKET is not None:
+            infected_s3_object(s3_object)
+        elif str_to_bool(AV_DELETE_INFECTED_FILES):
+            delete_s3_object(s3_object)
     print("Script finished at %s\n" %
           datetime.utcnow().strftime("%Y/%m/%d %H:%M:%S UTC"))
 
