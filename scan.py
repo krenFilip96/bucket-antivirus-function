@@ -181,7 +181,7 @@ def lambda_handler(event, context):
     if scan_result == AV_STATUS_INFECTED:
         if AV_INFECTED_BUCKET is not None:
             infected_s3_object(s3_object)
-        elif str_to_bool(AV_DELETE_INFECTED_FILES):
+        if str_to_bool(AV_DELETE_INFECTED_FILES):
             delete_s3_object(s3_object)
     print("Script finished at %s\n" %
           datetime.utcnow().strftime("%Y/%m/%d %H:%M:%S UTC"))
