@@ -154,8 +154,8 @@ def infected_s3_object(s3_object) :
     except:
         print ("Failed to move infected file : %s.%s %" (s3_object.bucket_name,s3_object.key))
     else:
-        print("Infected file moved to :  s%.%s %" (infected_s3_object.bucket_name, infected_s3_object.key))
-        delete_s3_object(s3_object)
+        print("Infected file moved to :  %s.%s %" (infected_s3_object.bucket_name, infected_s3_object.key))
+        
 
 def lambda_handler(event, context):
     start_time = datetime.utcnow()
